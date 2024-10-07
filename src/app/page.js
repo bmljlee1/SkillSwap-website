@@ -8,9 +8,10 @@ export default function Home() {
       </h1>
       <p className="text-lg text-black mb-8 text-center max-w-2xl">
         Welcome to our community of self-improvers! Here, you can share the
-        skills you’ve mastered and explain why they’re important to you. Browse
-        through others’ achievements and get inspired to grow and develop new
-        talents. Let's elevate ourselves, one skill at a time!
+        skills you&apos;ve mastered and explain why they&apos;re important to
+        you. Browse through others&apos; achievements and get inspired to grow
+        and develop new talents. Let&apos;s elevate ourselves, one skill at a
+        time!
       </p>
 
       <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
