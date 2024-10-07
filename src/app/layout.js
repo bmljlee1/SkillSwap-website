@@ -2,6 +2,13 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Link from "next/link";
 import NavBar from "./components/Navbar";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 // Define the local fonts
 const geistSans = localFont({
@@ -25,23 +32,31 @@ export const metadata = {
 // Root Layout
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
-      >
-        {/* Background Image Wrapper */}
-        <div className="relative min-h-screen">
-          {/* Background Image */}
-          <div className="absolute inset-0 bg-[url('/background.png')] bg-cover bg-center"></div>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+        >
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          {/* -------------Background Image Wrapper------------ */}
+          <div className="relative min-h-screen">
+            {/*-------------- Background Image --------------*/}
+            <div className="absolute inset-0 bg-[url('/background.png')] bg-cover bg-center"></div>
 
-          {/* Content Wrapper */}
-          <div className="relative z-10">
-            <NavBar />
-            {/* Main content */}
-            <main>{children}</main>
+            {/* -------------Content Wrapper ------------*/}
+            <div className="relative z-10">
+              <NavBar />
+              {/*-------------- Main content ------------*/}
+              <main>{children}</main>
+            </div>
           </div>
-        </div>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

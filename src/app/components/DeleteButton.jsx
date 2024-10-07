@@ -1,23 +1,12 @@
 "use client";
 
-export default function DeleteButton({ postId }) {
+export default function DeleteButton({ serverAction }) {
   const handleDelete = async () => {
     const confirmed = confirm("Are you sure you want to delete this post?");
     if (!confirmed) return;
 
     try {
-      // Send a DELETE request to the server-side route
-      const response = await fetch(`/api/posts/${postId}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        // If successful, redirect to the posts list after deletion
-        console.log("Post deleted successfully.");
-        window.location.href = "/posts"; // Redirect to posts page after deletion
-      } else {
-        console.error("Failed to delete the post. Status:", response.status);
-      }
+      serverAction();
     } catch (error) {
       console.error("Error deleting post:", error);
     }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import CommentFormInput from "./CommentFormInput";
 
-export default function PostComment() {
+export default function PostComment({ serverAction }) {
   const [formData, setFormData] = useState({
     username: "",
     comment: "",
@@ -20,23 +20,12 @@ export default function PostComment() {
     const myData = Object.fromEntries(commentData); // Convert formData to a regular object
 
     try {
-      // Use fetch to POST the data to the server or API
-      const response = await fetch("/api/comments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(myData),
-      });
+      serverAction(myData);
 
-      if (response.ok) {
-        console.log("Comment successfully posted:", myData);
-        // Reset form state on successful submission
-        setFormData({ username: "", comment: "" });
-        event.target.reset();
-      } else {
-        console.error("Failed to post comment.");
-      }
+      console.log("Comment successfully posted:", myData);
+      // Reset form state on successful submission
+      setFormData({ username: "", comment: "" });
+      event.target.reset();
     } catch (error) {
       console.error("Error posting comment:", error);
     } finally {

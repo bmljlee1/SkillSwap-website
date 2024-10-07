@@ -1,12 +1,19 @@
 import { connect } from "../utilities/connect";
 import Link from "next/link";
+import pg from "pg";
 
 export default async function Posts({ searchParams }) {
   console.log(searchParams);
 
-  const db = connect();
+  const db = new pg.Pool({
+    connectionString: process.env.DATABASE_URL,
+  });
 
-  const posts = (await db.query("SELECT * FROM posts")).rows;
+  // const db = await connect();
+  // console.log(await db);
+
+  const data = await db.query("SELECT * FROM posts");
+  const posts = await data.rows;
 
   const sorted = posts.sort((a, b) => {
     if (searchParams.sortBy === "asc") {

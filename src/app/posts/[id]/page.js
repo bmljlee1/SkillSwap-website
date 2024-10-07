@@ -9,21 +9,36 @@ const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-export default async function PostPage({ params, searchParams }) {
-  const action = searchParams.action;
-  const comment = searchParams.comment;
-  const username = searchParams.username || "Anonymous";
+export default async function PostPage({ params }) {
+  async function handleDelete() {
+    "use server";
 
-  // Handle comment submission
-  if (action === "add-comment" && comment) {
+    const result = await db.query("DELETE FROM posts WHERE id = $1", [
+      params.id,
+    ]);
+
+    revalidatePath(`/posts`);
+
+    redirect(`/posts`);
+  }
+
+  async function handleSubmit(formData) {
+    "use server";
+
+    const { username, comment } = formData;
+    console.log(formData);
+
     await db.query(
       "INSERT INTO comments (comment, post_id, username) VALUES ($1, $2, $3)",
       [comment, params.id, username]
     );
 
     revalidatePath(`/posts/${params.id}`);
-    return redirect(`/posts/${params.id}`);
+
+    redirect(`/posts/${params.id}`);
   }
+
+  // Handle comment submission
 
   // Fetch the post and its associated comments
   const post = await db.query(
@@ -86,12 +101,12 @@ export default async function PostPage({ params, searchParams }) {
 
       {/* Post Comment Form */}
       <div className="mt-6">
-        <PostComment postId={params.id} />
+        <PostComment postId={params.id} serverAction={handleSubmit} />
       </div>
 
       {/* Delete Button */}
       <div className="mt-4">
-        <DeleteButton postId={params.id} />
+        <DeleteButton postId={params.id} serverAction={handleDelete} />
       </div>
     </div>
   );
